@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> The Way you write is the Way</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<!-- Add jQuery library -->
+	<script type="text/javascript" src="javascripts/jquery-1.7.2.min.js"></script>
+	<!-- Add application js file -->
+	<script type="text/javascript" src="javascripts/application.js"></script>
+	<link type="text/css" href="styles/application.css" rel="stylesheet">
+</head>
+<body>
+	<div id="main">
+	<div class="container">
+		<div id="header">Javascript Template Demo</div>
+		<div id="content">
+		<div style="padding-top:15px;line-height:20px;">
+			Some of us may have been creating html code on the client side by concatenating strings.<br/>
+			For eg :
+			<pre  class="postCode">var htmlChunk = '&lt;tr&gt;&lt;td id=&quot;count&quot;&gt;1&lt;/td&gt;&lt;td&gt;&lt;input type=&quot;text&quot; name=&quot;name&quot;/&gt;&lt;/td&gt;&lt;td&gt;&lt;input type=&quot;text&quot; name=&quot;age&quot;/&gt;&lt;/td&gt;&lt;/tr&gt;'
+			</pre>
+			And then appending this html code at desired places.<br/><br/>
+			I have a cleaner way of doing this using templates. All you need is just add the template <a href="javascript:void(0)" onclick="jQuery('#mytemplateclass').slideToggle('slow')">class</a> in your javascript file and add html templates in your html page
+			like this	
+			<pre class="postCode" id="mytemplateclass" style="display:none">
+			<a href="javascript:void(0)" onclick="jQuery('#mytemplateclass').slideUp('slow')" style="float:right;">x</a>
+function Template( html, object_s ){
+	this.html = html,
+	this.object_s = object_s,
+	this.parser = function( obj ){
+		var html = this.html;
+		for( var i in obj ){
+			// Create a regex out of object key
+			var reg = new RegExp( "\{" + i + "\}" , "g" );
+			var html = html.replace( reg, obj[i] );
+		}
+		return html;
+	},
+	this.collection = function(){
+		var output = [];
+		for( var i = 0, l = this.object_s.length; i < l ;i++ ){
+			output.push( this.parser(this.object_s[i]) );
+		}
+		return output.join( "" );
+	},
+	this.locals = function(){
+		return this.parser( this.object_s );
+	},
+	this.render = function(){
+		// This is Nasty
+		return ( this.object_s instanceof Array ) ? this.collection() : this.locals();
+	}	
+}
+			</pre>
+<pre class="postCode">
+&lt;script type=&quot;text/Mytemplate&quot; id=&quot;appendme&quot;&gt;
+	&lt;tr&gt;
+		&lt;td id=&quot;count&quot;&gt;{count}&lt;/td&gt;
+		&lt;td&gt;&lt;input type=&quot;text&quot; name=&quot;name&quot;/&gt;&lt;/td&gt;
+		&lt;td&gt;&lt;input type=&quot;text&quot; name=&quot;age&quot;/&gt;&lt;/td&gt;
+	&lt;/tr&gt;
+&lt;/script&gt;
+</pre>
+Observe the {count} placeholder which will be replaced dynamically.<br/>
+Just get this template by id or using jquery selector and pass it to the template constructor.</br>
+Here we are passing 2 as count. You can pass as many as variables and use it in your template
+<pre class="postCode">
+var rowTemplate = new Template(jQuery(&quot;#appendme&quot;).html(), {&quot;count&quot; : 2})
+</pre>
+Check out the demo
+		</div>
+		<div class="form">
+		<table cellpadding=0 cellspacing=0 id="name-list" class="one_row_table">
+		<tr>
+			<th>Sr. No.</th>
+			<th>Passenger Name</th>
+			<th>Age</th>
+		</tr>
+		<tr>
+			<td id="count">1</td>
+			<td><input type="text" name="name"/></td>
+			<td><input type="text" name="age"/></td>
+		</tr>
+		</table>
+		<a href="javascript:void(0)" onclick="addRow();" class="add-link">Add Row</a>
+		</div>
+You may also wish pass array of count and get the html code generated. Here is how you can do this.
+<pre class="postCode">
+var rowTemplate = new Template(jQuery(&quot;#appendme&quot;).html(), [{&quot;count&quot; : 1}, {&quot;count&quot; : 2}, {&quot;count&quot; : 3}])
+</pre>
+	</div>
+		<div class="form">
+		<table cellpadding=0 cellspacing=0 id="five_row_append_me" class="five_row_table">
+		<tr>
+			<th>Sr. No.</th>
+			<th>Passenger Name</th>
+			<th>Age</th>
+		</tr>
+		<tr>
+			<td id="count">1</td>
+			<td><input type="text" name="name"/></td>
+			<td><input type="text" name="age"/></td>
+		</tr>
+		</table>
+		<a href="javascript:void(0)" onclick="addFiveRows();" class="add-link">Add Row</a>
+		</div>	
+		</div>
+	</div>
+	<div id="footer">
+		<div class="container"></div>
+	</div>	
+	</div>
+	
+<script type="text/Mytemplate" id="appendme">
+<tr>
+			<td id="count">{count}</td>
+			<td><input type="text" name="name"/></td>
+			<td><input type="text" name="age"/></td>
+</tr>
+</script>
+<script type="text/javascript">
+function addRow(){
+	var count = parseInt(jQuery("tr:last",".one_row_table").find("#count").html());
+	var rowTemplate = new Template(jQuery("#appendme").html(), {"count" : count + 1});
+	jQuery("#name-list").append(rowTemplate.render());
+}
+
+function addFiveRows(){
+	var count = parseInt(jQuery("tr:last", ".five_row_table").find("#count").html());
+	count_arr = [];
+	for(var i =1; i < 6; i++){
+		count_arr.push({count : count+ i});
+	}
+	var rowTemplate = new Template(jQuery("#appendme").html(), count_arr);
+	jQuery("#five_row_append_me").append(rowTemplate.render());
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+#main{
+
+}
+.container {
+width : 800px;
+margin : 0 auto;
+}
+body,table,td,div{font-family:verdana,helvetica,arial,sans-serif; font-size:14px;}
+#header{
+height : 40px;
+background-color :grey;
+color: whiteSmoke;
+text-align: center;
+padding-top: 10px;
+font-weight: bold;
+font-family: cursive;
+
+}
+#content{
+
+}
+
+table#name-list  td{ padding-left : 20px;}
+
+div.form {padding-top : 20px; padding-bottom : 20px;}
+
+.add-link{
+float: right;
+margin-right: 250px;
+margin-top: -20px;
+}
+
+.postCode{
+	background:lightyellow none repeat scroll 0 0;
+    	border:1px inset orange;
+	overflow:auto;
+	padding:6px;
+	text-align:left;
+	
+	
+white-space: pre-wrap; /* css-3 */
+white-space: -moz-pre-wrap !important; 
+white-space: -pre-wrap; /* Opera 4-6 */
+white-space: -o-pre-wrap; /* Opera 7 */
+word-wrap: break-word; /* Internet Explorer 5.5+ */
+}
